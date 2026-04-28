@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { nanoid } from "nanoid";
 
 const containerStyle = {
   display: "flex",
