@@ -1,0 +1,9 @@
+{
+  "short_name": "usePopcorn",
+  "name": "usePopcorn",
+  "description": "Search, rate, and track movies with usePopcorn.",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#6741d9",
+  "background_color": "#212529"
+}

@@ -54,7 +54,7 @@ body {
   max-width: 42rem;
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
-  /* overflow: scroll; */
+  overflow: hidden;
   position: relative;
 }
 
@@ -138,11 +138,34 @@ body {
 .list {
   list-style: none;
   padding: 0.8rem 0;
-  /* overflow: scroll; */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-background-100) var(--color-background-500);
+}
+
+.list::-webkit-scrollbar,
+.details::-webkit-scrollbar {
+  width: 0.8rem;
+}
+
+.list::-webkit-scrollbar-track,
+.details::-webkit-scrollbar-track {
+  background-color: var(--color-background-500);
+}
+
+.list::-webkit-scrollbar-thumb,
+.details::-webkit-scrollbar-thumb {
+  background-color: var(--color-background-100);
+  border-radius: 999px;
+}
+
+.list-movies {
+  height: 100%;
+  overflow-y: auto;
 }
 
 .list-watched {
   height: calc(100% - 9rem);
+  overflow-y: auto;
 }
 
 .list li {
@@ -240,8 +263,12 @@ body {
 /* ******* */
 
 .details {
+  height: 100%;
+  overflow-y: auto;
   line-height: 1.4;
   font-size: 1.4rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-background-100) var(--color-background-500);
 }
 
 .details header {
