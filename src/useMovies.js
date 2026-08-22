@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-const KEY = "9408765";
+const KEY = process.env.REACT_APP_OMDB_KEY;
 
 export function useMovies(query) {
   const [movies, setMovies] = useState([]);
@@ -21,7 +21,7 @@ export function useMovies(query) {
           if (!res.ok)
             throw new Error("Something went wrong while fetching Movies");
           const data = await res.json();
-          if (data.Response === "false") throw new Error("Movie not found");
+          if (data.Response === "False") throw new Error("Movie not found");
           setMovies(data.Search);
           setError("");
         } catch (err) {

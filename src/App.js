@@ -7,7 +7,7 @@ import { useKey } from "./useKey";
 const average = (arr) =>
   arr.length === 0 ? 0 : arr.reduce((acc, cur) => acc + cur / arr.length, 0);
 
-const KEY = "9408765";
+const KEY = process.env.REACT_APP_OMDB_KEY;
 
 export default function App() {
   const [query, setQuery] = useState("");
@@ -40,7 +40,6 @@ export default function App() {
       </NavBar>
       <Main>
         <Box>
-          {/* {isLoading ? <Loader /> : <MovieList movies={movies} />} */}
           {isLoading && <Loader />}
           {!isLoading && !error && (
             <MovieList movies={movies} onSelectMovie={handleSelectId} />
@@ -106,22 +105,6 @@ function Search({ query, setQuery }) {
     setQuery("");
   });
 
-  // useEffect(
-  //   function () {
-  //     function callback(e) {
-  //       if (document.activeElement === inputEl.current) return;
-
-  //       if (e.code === "Enter") {
-  //         inputEl.current.focus();
-  //         setQuery("");
-  //       }
-  //     }
-
-  //     document.addEventListener("keydown", callback);
-  //     return () => document.addEventListener("keydown", callback);
-  //   },
-  //   [setQuery]
-  // );
   return (
     <input
       className="search"
@@ -175,7 +158,7 @@ function Movie({ movie, onSelectMovie }) {
         src={
           movie.Poster !== "N/A"
             ? movie.Poster
-            : "https://via.placeholder.com/300x450?text=No+Image"
+            : "https://placehold.co/300x450?text=No+Image"
         }
         alt={`${movie.Title} poster`}
       />
@@ -280,7 +263,7 @@ function MovieDetails({ watched, selectedId, onCloseMovie, onAddWatched }) {
               src={
                 poster !== "N/A"
                   ? poster
-                  : "https://via.placeholder.com/300x450?text=No+Image"
+                  : "https://placehold.co/300x450?text=No+Image"
               }
               alt={`Poster of ${title}`}
             />
@@ -381,7 +364,7 @@ function WatchedMovie({ movie, onDeleteWatched }) {
         src={
           poster !== "N/A"
             ? poster
-            : "https://via.placeholder.com/300x450?text=No+Image"
+            : "https://placehold.co/300x450?text=No+Image"
         }
         alt={`${title} poster`}
       />
