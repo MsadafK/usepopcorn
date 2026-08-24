@@ -1,4 +1,4 @@
-import { MovieSearchResult } from "../types/movie";
+import { MovieSearchResult } from "@/types/movie";
 import Movie from "./Movie";
 
 interface MovieListProps {

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, CSSProperties } from "react";
 
 const containerStyle: CSSProperties = {

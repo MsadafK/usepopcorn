@@ -1,3 +1,7 @@
+/* Tailwind is installed (see package.json) but intentionally not imported
+   here yet — keeping this migration a pure like-for-like port. It'll get
+   wired in during the responsive-design pass. */
+
 :root {
   --color-primary: #6741d9;
   --color-primary-light: #7950f2;

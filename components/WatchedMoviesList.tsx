@@ -1,4 +1,4 @@
-import { WatchedMovie } from "../types/movie";
+import { WatchedMovie } from "@/types/movie";
 import WatchedMovieItem from "./WatchedMovieItem";
 
 interface WatchedMoviesListProps {

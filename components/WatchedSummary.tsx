@@ -1,5 +1,5 @@
-import { WatchedMovie } from "../types/movie";
-import { average } from "../utils/average";
+import { WatchedMovie } from "@/types/movie";
+import { average } from "@/utils/average";
 
 interface WatchedSummaryProps {
   watched: WatchedMovie[];

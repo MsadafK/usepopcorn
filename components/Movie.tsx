@@ -1,4 +1,6 @@
-import { MovieSearchResult } from "../types/movie";
+"use client";
+
+import { MovieSearchResult } from "@/types/movie";
 
 interface MovieProps {
   movie: MovieSearchResult;

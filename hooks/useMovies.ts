@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { MovieSearchResult } from "../types/movie";
-import { searchMovies } from "../services/omdbApi";
+import { MovieSearchResult } from "@/types/movie";
+import { searchMovies } from "@/services/omdbApi";
 
 interface UseMoviesResult {
   movies: MovieSearchResult[];

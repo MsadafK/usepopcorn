@@ -1,7 +1,9 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
-import { MovieDetails as MovieDetailsType, WatchedMovie } from "../types/movie";
-import { fetchMovieDetails } from "../services/omdbApi";
-import { useKey } from "../hooks/useKey";
+import { MovieDetails as MovieDetailsType, WatchedMovie } from "@/types/movie";
+import { fetchMovieDetails } from "@/services/omdbApi";
+import { useKey } from "@/hooks/useKey";
 import Loader from "./Loader";
 import StarRating from "./StarRating";
 
@@ -48,8 +50,6 @@ export default function MovieDetails({
   } = movie;
 
   function handleAdd() {
-    // Guards against the (rare) case of adding before the fetch has
-    // resolved — after this, TS knows title/poster/year are real strings.
     if (!title || !poster || !year) return;
 
     const newWatchedMovie: WatchedMovie = {

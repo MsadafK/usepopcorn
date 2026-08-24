@@ -1,20 +1,22 @@
-import { useState } from "react";
-import { useMovies } from "./hooks/useMovies";
-import { useLocalStorageState } from "./hooks/useLocalStorageState";
-import { WatchedMovie } from "./types/movie";
+"use client";
 
-import NavBar from "./components/NavBar";
-import Logo from "./components/Logo";
-import Search from "./components/Search";
-import NumResults from "./components/NumResults";
-import Main from "./components/Main";
-import Box from "./components/Box";
-import Loader from "./components/Loader";
-import ErrorMessage from "./components/ErrorMessage";
-import MovieList from "./components/MovieList";
-import MovieDetails from "./components/MovieDetails";
-import WatchedSummary from "./components/WatchedSummary";
-import WatchedMoviesList from "./components/WatchedMoviesList";
+import { useState } from "react";
+import { useMovies } from "@/hooks/useMovies";
+import { useLocalStorageState } from "@/hooks/useLocalStorageState";
+import { WatchedMovie } from "@/types/movie";
+
+import NavBar from "./NavBar";
+import Logo from "./Logo";
+import Search from "./Search";
+import NumResults from "./NumResults";
+import Main from "./Main";
+import Box from "./Box";
+import Loader from "./Loader";
+import ErrorMessage from "./ErrorMessage";
+import MovieList from "./MovieList";
+import MovieDetails from "./MovieDetails";
+import WatchedSummary from "./WatchedSummary";
+import WatchedMoviesList from "./WatchedMoviesList";
 
 export default function App() {
   const [query, setQuery] = useState("");

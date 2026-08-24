@@ -1,5 +1,7 @@
+"use client";
+
 import { useRef, Dispatch, SetStateAction } from "react";
-import { useKey } from "../hooks/useKey";
+import { useKey } from "@/hooks/useKey";
 
 interface SearchProps {
   query: string;
