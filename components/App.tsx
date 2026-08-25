@@ -2,81 +2,86 @@
 
 import { useState } from "react";
 import { useMovies } from "@/hooks/useMovies";
+import { useMovieList } from "@/hooks/useMovieList";
 import { useLocalStorageState } from "@/hooks/useLocalStorageState";
+import { fetchTrending, fetchTopRated } from "@/services/tmdbApi";
 import { WatchedMovie } from "@/types/movie";
 
-import NavBar from "./NavBar";
-import Logo from "./Logo";
-import Search from "./Search";
-import NumResults from "./NumResults";
-import Main from "./Main";
-import Box from "./Box";
-import Loader from "./Loader";
-import ErrorMessage from "./ErrorMessage";
-import MovieList from "./MovieList";
-import MovieDetails from "./MovieDetails";
-import WatchedSummary from "./WatchedSummary";
-import WatchedMoviesList from "./WatchedMoviesList";
+import TopBar from "./TopBar";
+import Hero from "./Hero";
+import Row from "./Row";
+import SearchGrid from "./SearchGrid";
+import MovieDetailsModal from "./MovieDetailsModal";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const { movies, isLoading, error } = useMovies(query);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [watched, setWatched] = useLocalStorageState<WatchedMovie[]>(
     [],
     "watched"
   );
 
-  function handleSelectId(id: string) {
-    setSelectedId((prevId) => (prevId === id ? null : id));
-  }
+  const { movies: searchResults, isLoading: searchLoading, error: searchError } =
+    useMovies(query);
+  const { movies: trending, isLoading: trendingLoading } =
+    useMovieList(fetchTrending);
+  const { movies: topRated, isLoading: topRatedLoading } =
+    useMovieList(fetchTopRated);
 
-  function handleCloseMovie() {
-    setSelectedId(null);
-  }
+  const isSearching = query.trim().length >= 3;
+  const featured = trending[0];
 
   function handleAddWatched(movie: WatchedMovie) {
     setWatched((watched) => [...watched, movie]);
   }
 
-  function handleDeleteWatched(id: string) {
-    setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
-  }
-
   return (
     <>
-      <NavBar>
-        <Logo />
-        <Search query={query} setQuery={setQuery} />
-        <NumResults movies={movies} />
-      </NavBar>
-      <Main>
-        <Box>
-          {isLoading && <Loader />}
-          {!isLoading && !error && (
-            <MovieList movies={movies} onSelectMovie={handleSelectId} />
-          )}
-          {error && <ErrorMessage message={error} />}
-        </Box>
-        <Box>
-          {selectedId ? (
-            <MovieDetails
-              watched={watched}
-              selectedId={selectedId}
-              onCloseMovie={handleCloseMovie}
-              onAddWatched={handleAddWatched}
+      <TopBar query={query} setQuery={setQuery} />
+
+      <main className="pb-16">
+        {isSearching ? (
+          <SearchGrid
+            query={query}
+            movies={searchResults}
+            isLoading={searchLoading}
+            error={searchError}
+            onSelectMovie={setSelectedId}
+          />
+        ) : (
+          <>
+            {featured && (
+              <Hero movie={featured} onSelectMovie={setSelectedId} />
+            )}
+            <Row
+              title="Your watchlist"
+              movies={watched}
+              onSelectMovie={setSelectedId}
             />
-          ) : (
-            <>
-              <WatchedSummary watched={watched} />
-              <WatchedMoviesList
-                watched={watched}
-                onDeleteWatched={handleDeleteWatched}
-              />
-            </>
-          )}
-        </Box>
-      </Main>
+            <Row
+              title="Trending now"
+              movies={trending}
+              isLoading={trendingLoading}
+              onSelectMovie={setSelectedId}
+            />
+            <Row
+              title="Top rated"
+              movies={topRated}
+              isLoading={topRatedLoading}
+              onSelectMovie={setSelectedId}
+            />
+          </>
+        )}
+      </main>
+
+      {selectedId !== null && (
+        <MovieDetailsModal
+          selectedId={selectedId}
+          watched={watched}
+          onClose={() => setSelectedId(null)}
+          onAddWatched={handleAddWatched}
+        />
+      )}
     </>
   );
 }

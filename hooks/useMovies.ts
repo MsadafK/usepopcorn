@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import { MovieSearchResult } from "@/types/movie";
-import { searchMovies } from "@/services/omdbApi";
+import { MovieSummary } from "@/types/movie";
+import { searchMovies } from "@/services/tmdbApi";
 
 interface UseMoviesResult {
-  movies: MovieSearchResult[];
+  movies: MovieSummary[];
   isLoading: boolean;
   error: string;
 }
 
 export function useMovies(query: string): UseMoviesResult {
-  const [movies, setMovies] = useState<MovieSearchResult[]>([]);
+  const [movies, setMovies] = useState<MovieSummary[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 

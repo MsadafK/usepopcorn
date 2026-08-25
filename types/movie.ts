@@ -1,35 +1,44 @@
-// Shape returned by OMDb's search endpoint (s=) — one entry per result
-export interface MovieSearchResult {
-  imdbID: string;
-  Title: string;
-  Year: string;
-  Poster: string;
-  Type?: string;
-}
+// Normalized to camelCase at the API boundary — TMDB's raw responses use
+// snake_case (poster_path, vote_average, etc), converted once in the route
+// handlers so the rest of the app never deals with that.
 
-// Shape returned by OMDb's full-details endpoint (i=)
-export interface MovieDetails {
-  imdbID: string;
-  Title: string;
-  Year: string;
-  Poster: string;
-  Runtime: string;
-  imdbRating: string;
-  Plot: string;
-  Released: string;
-  Actors: string;
-  Director: string;
-  Genre: string;
-}
-
-// Shape of an item saved to the user's local "watched" list
-export interface WatchedMovie {
-  imdbID: string;
+export interface MovieSummary {
+  id: number;
   title: string;
-  year: string;
-  poster: string;
-  imdbRating: number;
+  posterPath: string | null;
+  backdropPath: string | null;
+  releaseDate: string;
+  voteAverage: number;
+  overview: string;
+  genreIds: number[];
+}
+
+export interface MovieDetails {
+  id: number;
+  title: string;
+  tagline: string;
+  overview: string;
+  posterPath: string | null;
+  backdropPath: string | null;
+  releaseDate: string;
+  runtime: number;
+  voteAverage: number;
+  genres: { id: number; name: string }[];
+  trailerKey: string | null;
+}
+
+export interface WatchedMovie {
+  id: number;
+  title: string;
+  posterPath: string | null;
+  releaseDate: string;
+  voteAverage: number;
   runtime: number;
   userRating: number;
   countRatingDecisions: number;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
 }
