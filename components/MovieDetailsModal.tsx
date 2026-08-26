@@ -25,6 +25,27 @@ export default function MovieDetailsModal({
   const [isLoading, setIsLoading] = useState(true);
   const [userRating, setUserRating] = useState(0);
   const countRef = useRef(0);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const titleId = `movie-details-title-${selectedId}`;
+
+  // Lock background scroll while the modal is open, and restore it on close
+  useEffect(() => {
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, []);
+
+  // Move focus into the modal on open, and back to whatever triggered it
+  // (e.g. the poster card that was clicked) when it closes
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+    return () => {
+      previouslyFocused?.focus();
+    };
+  }, []);
 
   useEffect(() => {
     if (userRating) countRef.current += 1;
@@ -79,6 +100,9 @@ export default function MovieDetailsModal({
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
         className="w-full max-w-2xl overflow-hidden rounded-lg bg-surface-raised"
         onClick={(e) => e.stopPropagation()}
       >
@@ -95,14 +119,18 @@ export default function MovieDetailsModal({
                 className="h-56 w-full object-cover sm:h-72"
               />
               <button
+                ref={closeButtonRef}
                 onClick={onClose}
-                aria-label="Close"
-                className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
+                aria-label="Close movie details"
+                className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white outline-none hover:bg-black/80 focus-visible:ring-2 focus-visible:ring-white"
               >
                 ✕
               </button>
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-surface-raised px-5 pb-4 pt-10 sm:px-8">
-                <h2 className="text-2xl font-bold text-white sm:text-3xl">
+                <h2
+                  id={titleId}
+                  className="text-2xl font-bold text-white sm:text-3xl"
+                >
                   {movie.title}
                 </h2>
                 <p className="mt-1 text-sm text-zinc-300">
@@ -150,7 +178,7 @@ export default function MovieDetailsModal({
                     <button
                       onClick={handleAdd}
                       disabled={!userRating}
-                      className="rounded bg-brand px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-brand-light disabled:cursor-not-allowed disabled:opacity-40"
+                      className="rounded bg-brand px-4 py-2 text-sm font-semibold text-white outline-none transition-colors hover:bg-brand-light focus-visible:ring-2 focus-visible:ring-brand-light disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       + Add to watchlist
                     </button>

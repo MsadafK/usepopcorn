@@ -11,12 +11,12 @@ export default function PosterCard({ movie, onSelectMovie }: PosterCardProps) {
   return (
     <button
       onClick={() => onSelectMovie(movie.id)}
-      className="group w-full text-left"
+      className="group w-full rounded text-left outline-none focus-visible:ring-2 focus-visible:ring-brand-light"
     >
       <div className="overflow-hidden rounded-md bg-surface">
         <img
           src={posterUrl(movie.posterPath)}
-          alt={`${movie.title} poster`}
+          alt=""
           className="aspect-[2/3] w-full object-cover transition-transform duration-200 ease-out group-hover:scale-105"
         />
       </div>

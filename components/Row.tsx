@@ -28,9 +28,16 @@ export default function Row({
           <Loader />
         </div>
       ) : (
-        <div className="row-scroll flex gap-3 overflow-x-auto px-4 pb-2 sm:px-8">
+        <div
+          className="row-scroll flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:px-8"
+          role="group"
+          aria-label={title}
+        >
           {movies.map((movie) => (
-            <div key={movie.id} className="w-[130px] shrink-0 sm:w-[160px]">
+            <div
+              key={movie.id}
+              className="w-[130px] shrink-0 snap-start sm:w-[160px]"
+            >
               <PosterCard movie={movie} onSelectMovie={onSelectMovie} />
             </div>
           ))}

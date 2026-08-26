@@ -16,7 +16,11 @@ export default function Hero({ movie, onSelectMovie }: HeroProps) {
       <img
         src={backdropUrl(movie.backdropPath)}
         alt=""
-        className="h-[38vh] min-h-[280px] w-full object-cover opacity-60 sm:h-[50vh]"
+        className="h-[42vh] min-h-[300px] w-full object-cover sm:h-[55vh]"
+      />
+      <div
+        className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent"
+        aria-hidden="true"
       />
       <div className="absolute inset-0 flex flex-col justify-end px-4 pb-6 sm:px-8 sm:pb-10">
         <p className="mb-2 text-xs font-medium tracking-wide text-brand-light">
@@ -32,7 +36,7 @@ export default function Hero({ movie, onSelectMovie }: HeroProps) {
         </p>
         <button
           onClick={() => onSelectMovie(movie.id)}
-          className="mt-4 flex w-fit items-center gap-2 rounded bg-white px-5 py-2 text-sm font-semibold text-black transition-colors hover:bg-zinc-200"
+          className="mt-4 flex w-fit items-center gap-2 rounded bg-white px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
         >
           View details
         </button>

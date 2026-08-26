@@ -47,7 +47,7 @@ export default function StarRating({
   };
 
   return (
-    <div style={containerStyle}>
+    <div style={containerStyle} role="radiogroup" aria-label="Rate this movie">
       <div style={starContainerStyle}>
         {Array.from({ length: maxRating }, (_, i) => (
           <Star
@@ -58,6 +58,7 @@ export default function StarRating({
             full={tempRating ? tempRating >= i + 1 : rating >= i + 1}
             color={color}
             size={size}
+            label={`Rate ${i + 1} out of ${maxRating}`}
           />
         ))}
       </div>
@@ -77,23 +78,35 @@ interface StarProps {
   onHoverOut: () => void;
   color: string;
   size: number;
+  label: string;
 }
 
-function Star({ onClick, full, onHoverIn, onHoverOut, color, size }: StarProps) {
+function Star({
+  onClick,
+  full,
+  onHoverIn,
+  onHoverOut,
+  color,
+  size,
+  label,
+}: StarProps) {
   const starStyle: CSSProperties = {
     width: `${size}px`,
     height: `${size}px`,
     display: "block",
-    cursor: "pointer",
   };
 
   return (
-    <span
-      role="button"
+    <button
+      type="button"
+      aria-label={label}
       style={starStyle}
+      className="cursor-pointer rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-brand-light"
       onClick={onClick}
       onMouseEnter={onHoverIn}
       onMouseLeave={onHoverOut}
+      onFocus={onHoverIn}
+      onBlur={onHoverOut}
     >
       {full ? (
         <svg
@@ -119,6 +132,6 @@ function Star({ onClick, full, onHoverIn, onHoverOut, color, size }: StarProps) 
           />
         </svg>
       )}
-    </span>
+    </button>
   );
 }

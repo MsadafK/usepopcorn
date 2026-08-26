@@ -21,7 +21,8 @@ export default function GenreFilter({
         <button
           key={g.id}
           onClick={() => onSelectGenre(selectedGenre === g.id ? null : g.id)}
-          className={`shrink-0 rounded-full px-4 py-1.5 text-sm transition-colors ${
+          aria-pressed={selectedGenre === g.id}
+          className={`shrink-0 rounded-full px-4 py-2 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand-light ${
             selectedGenre === g.id
               ? "bg-brand text-white"
               : "bg-surface text-zinc-300 hover:bg-surface-raised"

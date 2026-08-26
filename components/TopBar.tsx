@@ -24,13 +24,17 @@ export default function TopBar({ query, setQuery }: TopBarProps) {
           usePopcorn
         </span>
       </div>
+      <label htmlFor="movie-search" className="sr-only">
+        Search movies
+      </label>
       <input
+        id="movie-search"
         ref={inputEl}
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search movies..."
-        className="ml-auto w-full max-w-xs rounded-full border border-zinc-700 bg-surface px-4 py-1.5 text-sm text-white placeholder-zinc-500 outline-none focus:border-brand"
+        className="min-w-0 flex-1 max-w-xs rounded-full border border-zinc-700 bg-surface px-4 py-2 text-sm text-white placeholder-zinc-500 outline-none focus-visible:ring-2 focus-visible:ring-brand"
       />
     </header>
   );
