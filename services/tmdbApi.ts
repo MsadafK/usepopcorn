@@ -31,3 +31,7 @@ export function fetchGenres() {
 export function fetchMovieDetails(id: number) {
   return getJson<MovieDetails>(`/api/movies/${id}`);
 }
+
+export function fetchByGenre(genreId: number) {
+  return getJson<MovieSummary[]>(`/api/movies/discover?genre=${genreId}`);
+}
