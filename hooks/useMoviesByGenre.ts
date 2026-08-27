@@ -16,10 +16,7 @@ export function useMoviesByGenre(
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (genreId === null) {
-      setMovies([]);
-      return;
-    }
+    if (genreId === null) return;
 
     let cancelled = false;
 
@@ -46,5 +43,9 @@ export function useMoviesByGenre(
     };
   }, [genreId]);
 
-  return { movies, isLoading, error };
+  return {
+    movies: genreId === null ? [] : movies,
+    isLoading,
+    error,
+  };
 }

@@ -47,7 +47,12 @@ export default function StarRating({
   };
 
   return (
-    <div style={containerStyle} role="radiogroup" aria-label="Rate this movie">
+    <div
+      style={containerStyle}
+      role="radiogroup"
+      aria-label="Rate this movie"
+      className={className}
+    >
       <div style={starContainerStyle}>
         {Array.from({ length: maxRating }, (_, i) => (
           <Star

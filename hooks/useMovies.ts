@@ -15,6 +15,8 @@ export function useMovies(query: string): UseMoviesResult {
 
   useEffect(
     function () {
+      if (query.length < 3) return;
+
       const controller = new AbortController();
 
       async function fetchMovies() {
@@ -33,12 +35,6 @@ export function useMovies(query: string): UseMoviesResult {
         }
       }
 
-      if (query.length < 3) {
-        setMovies([]);
-        setError("");
-        return;
-      }
-
       fetchMovies();
 
       return function () {
@@ -48,5 +44,9 @@ export function useMovies(query: string): UseMoviesResult {
     [query]
   );
 
-  return { movies, isLoading, error };
+  // Derived instead of stored: avoids a synchronous setState-in-effect just
+  // to clear results when the query drops below 3 characters.
+  const effectiveMovies = query.length < 3 ? [] : movies;
+
+  return { movies: effectiveMovies, isLoading, error };
 }

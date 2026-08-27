@@ -13,7 +13,11 @@ export function useLocalStorageState<T>(
   // server render pass (the old CRA setup never rendered on a server at
   // all, so this problem never came up there).
   useEffect(() => {
+    // This is the "subscribe to an external system on mount" case the
+    // set-state-in-effect rule's own docs carve out as legitimate — there's
+    // no derived-value alternative since localStorage lives outside React.
     const storedValue = localStorage.getItem(key);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (storedValue) setValue(JSON.parse(storedValue) as T);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
