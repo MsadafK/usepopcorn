@@ -2,7 +2,7 @@
 
 import { MovieSummary } from "@/types/movie";
 import PosterCard from "./PosterCard";
-import Loader from "./Loader";
+import Skeleton from "./Skeleton";
 import ErrorMessage from "./ErrorMessage";
 
 interface MovieGridProps {
@@ -24,7 +24,17 @@ export default function MovieGrid({
     <div className="px-4 py-6 sm:px-8">
       <h2 className="mb-4 text-lg font-semibold text-white">{heading}</h2>
 
-      {isLoading && <Loader />}
+      {isLoading && (
+        <div className="grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-5 md:grid-cols-6">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i}>
+              <Skeleton className="aspect-[2/3] w-full" />
+              <Skeleton className="mt-1.5 h-4 w-3/4" />
+            </div>
+          ))}
+        </div>
+      )}
+
       {error && <ErrorMessage message={error} />}
 
       {!isLoading && !error && movies.length === 0 && (

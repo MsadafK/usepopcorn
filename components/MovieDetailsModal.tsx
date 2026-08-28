@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { MovieDetails, WatchedMovie } from "@/types/movie";
 import { fetchMovieDetails } from "@/services/tmdbApi";
 import { backdropUrl } from "@/utils/tmdbImage";
 import { useKey } from "@/hooks/useKey";
-import Loader from "./Loader";
+import Skeleton from "./Skeleton";
 import StarRating from "./StarRating";
 
 interface MovieDetailsModalProps {
@@ -107,16 +108,25 @@ export default function MovieDetailsModal({
         onClick={(e) => e.stopPropagation()}
       >
         {isLoading ? (
-          <div className="p-12">
-            <Loader />
+          <div>
+            <Skeleton className="h-56 w-full rounded-none sm:h-72" />
+            <div className="px-5 py-5 sm:px-8">
+              <Skeleton className="mb-4 h-4 w-24" />
+              <Skeleton className="mb-2 h-4 w-full" />
+              <Skeleton className="mb-2 h-4 w-full" />
+              <Skeleton className="mb-5 h-4 w-2/3" />
+              <Skeleton className="h-16 w-full" />
+            </div>
           </div>
         ) : (
           <>
-            <div className="relative">
-              <img
+            <div className="relative h-56 w-full sm:h-72">
+              <Image
                 src={backdropUrl(movie.backdropPath ?? null)}
                 alt=""
-                className="h-56 w-full object-cover sm:h-72"
+                fill
+                sizes="(max-width: 640px) 100vw, 672px"
+                className="object-cover"
               />
               <button
                 ref={closeButtonRef}

@@ -11,6 +11,7 @@ import { WatchedMovie } from "@/types/movie";
 
 import TopBar from "./TopBar";
 import Hero from "./Hero";
+import HeroSkeleton from "./HeroSkeleton";
 import Row from "./Row";
 import GenreFilter from "./GenreFilter";
 import MovieGrid from "./MovieGrid";
@@ -82,6 +83,7 @@ export default function App() {
               />
             ) : (
               <>
+                {trendingLoading && <HeroSkeleton />}
                 {featured && (
                   <Hero movie={featured} onSelectMovie={setSelectedId} />
                 )}

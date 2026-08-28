@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { MovieSummary } from "@/types/movie";
 import { backdropUrl } from "@/utils/tmdbImage";
 
@@ -12,11 +13,14 @@ export default function Hero({ movie, onSelectMovie }: HeroProps) {
   const year = movie.releaseDate ? movie.releaseDate.slice(0, 4) : "";
 
   return (
-    <div className="relative w-full overflow-hidden bg-surface">
-      <img
+    <div className="relative h-[42vh] min-h-[300px] w-full overflow-hidden bg-surface sm:h-[55vh]">
+      <Image
         src={backdropUrl(movie.backdropPath)}
         alt=""
-        className="h-[42vh] min-h-[300px] w-full object-cover sm:h-[55vh]"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover"
       />
       <div
         className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent"

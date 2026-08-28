@@ -1,7 +1,7 @@
 "use client";
 
 import PosterCard from "./PosterCard";
-import Loader from "./Loader";
+import Skeleton from "./Skeleton";
 
 interface RowProps {
   title: string;
@@ -24,8 +24,13 @@ export default function Row({
         {title}
       </h2>
       {isLoading ? (
-        <div className="px-4 sm:px-8">
-          <Loader />
+        <div className="flex gap-3 overflow-x-hidden px-4 sm:px-8">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="w-[130px] shrink-0 sm:w-[160px]">
+              <Skeleton className="aspect-[2/3] w-full" />
+              <Skeleton className="mt-1.5 h-4 w-3/4" />
+            </div>
+          ))}
         </div>
       ) : (
         <div
