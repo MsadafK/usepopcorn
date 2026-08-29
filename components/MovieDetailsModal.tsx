@@ -25,9 +25,24 @@ export default function MovieDetailsModal({
   const [movie, setMovie] = useState<Partial<MovieDetails>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [userRating, setUserRating] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
   const countRef = useRef(0);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const titleId = `movie-details-title-${selectedId}`;
+
+  // Triggers the enter transition on mount
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setIsVisible(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  // Plays the exit transition before actually unmounting (the parent
+  // removes this component the instant onClose fires, which would
+  // otherwise cut the animation off)
+  function handleClose() {
+    setIsVisible(false);
+    setTimeout(onClose, 200);
+  }
 
   // Lock background scroll while the modal is open, and restore it on close
   useEffect(() => {
@@ -52,7 +67,7 @@ export default function MovieDetailsModal({
     if (userRating) countRef.current += 1;
   }, [userRating]);
 
-  useKey("Escape", onClose);
+  useKey("Escape", handleClose);
 
   useEffect(() => {
     let cancelled = false;
@@ -90,21 +105,27 @@ export default function MovieDetailsModal({
       userRating,
       countRatingDecisions: countRef.current,
     });
-    onClose();
+    handleClose();
   }
 
   const year = movie.releaseDate ? movie.releaseDate.slice(0, 4) : "";
 
   return (
     <div
-      className="fixed inset-0 z-30 flex items-start justify-center overflow-y-auto bg-black/80 px-4 py-8"
-      onClick={onClose}
+      className={`fixed inset-0 z-30 flex items-start justify-center overflow-y-auto px-4 py-8 transition-opacity duration-200 ${
+        isVisible ? "bg-black/80 opacity-100" : "bg-black/80 opacity-0"
+      }`}
+      onClick={handleClose}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="w-full max-w-2xl overflow-hidden rounded-lg bg-surface-raised"
+        className={`w-full max-w-2xl overflow-hidden rounded-lg bg-surface-raised transition-all duration-200 ${
+          isVisible
+            ? "translate-y-0 scale-100 opacity-100"
+            : "translate-y-2 scale-95 opacity-0"
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
         {isLoading ? (
@@ -130,7 +151,7 @@ export default function MovieDetailsModal({
               />
               <button
                 ref={closeButtonRef}
-                onClick={onClose}
+                onClick={handleClose}
                 aria-label="Close movie details"
                 className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white outline-none hover:bg-black/80 focus-visible:ring-2 focus-visible:ring-white"
               >
