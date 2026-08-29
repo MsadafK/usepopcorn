@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useMovieList } from "@/hooks/useMovieList";
 import { useMoviesByGenre } from "@/hooks/useMoviesByGenre";
 import { useGenres } from "@/hooks/useGenres";
@@ -19,9 +20,20 @@ import MovieGrid from "./MovieGrid";
 import MovieDetailsModal from "./MovieDetailsModal";
 
 export default function App() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // The URL is the single source of truth for these two - makes both
+  // shareable/bookmarkable, and survives a refresh or browser back/forward.
+  const selectedId = searchParams.get("movie")
+    ? Number(searchParams.get("movie"))
+    : null;
+  const selectedGenre = searchParams.get("genre")
+    ? Number(searchParams.get("genre"))
+    : null;
+
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
-  const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [watched, setWatched] = useLocalStorageState<WatchedMovie[]>(
     [],
     "watched"
@@ -35,6 +47,9 @@ export default function App() {
   const {
     movies: genreMovies,
     isLoading: genreLoading,
+    isLoadingMore: genreLoadingMore,
+    hasMore: genreHasMore,
+    loadMore: loadMoreGenreMovies,
     error: genreError,
   } = useMoviesByGenre(selectedGenre);
 
@@ -47,6 +62,31 @@ export default function App() {
   const isGenreMode = selectedGenre !== null;
   const featured = trending[0];
   const selectedGenreName = genres.find((g) => g.id === selectedGenre)?.name;
+
+  function withParams(updates: Record<string, string | null>) {
+    const params = new URLSearchParams(searchParams.toString());
+    for (const [key, value] of Object.entries(updates)) {
+      if (value === null) params.delete(key);
+      else params.set(key, value);
+    }
+    const qs = params.toString();
+    return qs ? `${pathname}?${qs}` : pathname;
+  }
+
+  // Opening/closing a movie is a "navigation" - worth a back-button entry.
+  function openMovie(id: number) {
+    router.push(withParams({ movie: String(id) }));
+  }
+
+  function closeMovie() {
+    router.push(withParams({ movie: null }));
+  }
+
+  // Switching genres is a filter adjustment, not a navigation - replace so
+  // clicking through five genres doesn't mean pressing Back five times.
+  function selectGenre(id: number | null) {
+    router.replace(withParams({ genre: id === null ? null : String(id) }));
+  }
 
   // Global ⌘K / Ctrl+K shortcut to open the command palette from anywhere
   useEffect(() => {
@@ -72,7 +112,7 @@ export default function App() {
         <GenreFilter
           genres={genres}
           selectedGenre={selectedGenre}
-          onSelectGenre={setSelectedGenre}
+          onSelectGenre={selectGenre}
         />
 
         {isGenreMode ? (
@@ -81,38 +121,39 @@ export default function App() {
             movies={genreMovies}
             isLoading={genreLoading}
             error={genreError}
-            onSelectMovie={setSelectedId}
+            onSelectMovie={openMovie}
+            isLoadingMore={genreLoadingMore}
+            hasMore={genreHasMore}
+            onLoadMore={loadMoreGenreMovies}
           />
         ) : (
           <>
             {trendingLoading && <HeroSkeleton />}
-            {featured && (
-              <Hero movie={featured} onSelectMovie={setSelectedId} />
-            )}
+            {featured && <Hero movie={featured} onSelectMovie={openMovie} />}
             <Row
               title="Your watchlist"
               movies={watched}
-              onSelectMovie={setSelectedId}
+              onSelectMovie={openMovie}
             />
             {topRatedWatched && (
               <Row
                 title={`Because you rated "${topRatedWatched.title}" highly`}
                 movies={recommendations}
                 isLoading={recommendationsLoading}
-                onSelectMovie={setSelectedId}
+                onSelectMovie={openMovie}
               />
             )}
             <Row
               title="Trending now"
               movies={trending}
               isLoading={trendingLoading}
-              onSelectMovie={setSelectedId}
+              onSelectMovie={openMovie}
             />
             <Row
               title="Top rated"
               movies={topRated}
               isLoading={topRatedLoading}
-              onSelectMovie={setSelectedId}
+              onSelectMovie={openMovie}
             />
           </>
         )}
@@ -121,7 +162,7 @@ export default function App() {
       {isPaletteOpen && (
         <CommandPalette
           onClose={() => setIsPaletteOpen(false)}
-          onSelectMovie={setSelectedId}
+          onSelectMovie={openMovie}
         />
       )}
 
@@ -129,7 +170,7 @@ export default function App() {
         <MovieDetailsModal
           selectedId={selectedId}
           watched={watched}
-          onClose={() => setSelectedId(null)}
+          onClose={closeMovie}
           onAddWatched={handleAddWatched}
         />
       )}

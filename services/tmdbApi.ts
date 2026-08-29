@@ -32,8 +32,16 @@ export function fetchMovieDetails(id: number) {
   return getJson<MovieDetails>(`/api/movies/${id}`);
 }
 
-export function fetchByGenre(genreId: number) {
-  return getJson<MovieSummary[]>(`/api/movies/discover?genre=${genreId}`);
+interface PaginatedMovies {
+  results: MovieSummary[];
+  page: number;
+  totalPages: number;
+}
+
+export function fetchByGenre(genreId: number, page: number = 1) {
+  return getJson<PaginatedMovies>(
+    `/api/movies/discover?genre=${genreId}&page=${page}`
+  );
 }
 
 export function fetchRecommendations(movieId: number) {

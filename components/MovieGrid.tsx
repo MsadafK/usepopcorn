@@ -11,6 +11,9 @@ interface MovieGridProps {
   isLoading: boolean;
   error: string;
   onSelectMovie: (id: number) => void;
+  isLoadingMore?: boolean;
+  hasMore?: boolean;
+  onLoadMore?: () => void;
 }
 
 export default function MovieGrid({
@@ -19,6 +22,9 @@ export default function MovieGrid({
   isLoading,
   error,
   onSelectMovie,
+  isLoadingMore,
+  hasMore,
+  onLoadMore,
 }: MovieGridProps) {
   return (
     <div className="px-4 py-6 sm:px-8">
@@ -42,15 +48,29 @@ export default function MovieGrid({
       )}
 
       {!isLoading && !error && movies.length > 0 && (
-        <div className="grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-5 md:grid-cols-6">
-          {movies.map((movie) => (
-            <PosterCard
-              key={movie.id}
-              movie={movie}
-              onSelectMovie={onSelectMovie}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-5 md:grid-cols-6">
+            {movies.map((movie) => (
+              <PosterCard
+                key={movie.id}
+                movie={movie}
+                onSelectMovie={onSelectMovie}
+              />
+            ))}
+          </div>
+
+          {hasMore && onLoadMore && (
+            <div className="mt-6 flex justify-center">
+              <button
+                onClick={onLoadMore}
+                disabled={isLoadingMore}
+                className="rounded-full border border-zinc-700 px-5 py-2 text-sm text-zinc-300 outline-none transition-colors hover:bg-surface focus-visible:ring-2 focus-visible:ring-brand disabled:opacity-50"
+              >
+                {isLoadingMore ? "Loading..." : "Load more"}
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -88,6 +88,14 @@ export default function MovieDetailsModal({
     };
   }, [selectedId]);
 
+  useEffect(() => {
+    if (!movie.title) return;
+    document.title = `${movie.title} | usePopcorn`;
+    return () => {
+      document.title = "usePopcorn";
+    };
+  }, [movie.title]);
+
   const isWatched = watched.some((m) => m.id === selectedId);
   const watchedEntry = watched.find((m) => m.id === selectedId);
 
