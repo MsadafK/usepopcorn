@@ -34,9 +34,11 @@ export async function generateMetadata({
       openGraph: { title: movie.title, description, images: image },
       twitter: { card: "summary_large_image", title: movie.title, description, images: image },
     };
-  } catch {
-    // If TMDB is unreachable or the id is invalid, fall back quietly
-    // rather than breaking the page over a metadata problem.
+  } catch (err) {
+    // Falls back quietly for the *user* (a metadata problem shouldn't break
+    // the page), but logs server-side so it's actually diagnosable via
+    // Vercel's function logs instead of failing completely silently.
+    console.error("generateMetadata failed for movie", movieId, err);
     return defaultMetadata;
   }
 }
