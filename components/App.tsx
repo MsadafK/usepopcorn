@@ -104,6 +104,10 @@ export default function App() {
     setWatched((watched) => [...watched, movie]);
   }
 
+  function handleRemoveWatched(id: number) {
+    setWatched((watched) => watched.filter((movie) => movie.id !== id));
+  }
+
   return (
     <>
       <TopBar onOpenPalette={() => setIsPaletteOpen(true)} />
@@ -172,6 +176,7 @@ export default function App() {
           watched={watched}
           onClose={closeMovie}
           onAddWatched={handleAddWatched}
+          onRemoveWatched={handleRemoveWatched}
         />
       )}
     </>

@@ -14,6 +14,7 @@ interface MovieDetailsModalProps {
   watched: WatchedMovie[];
   onClose: () => void;
   onAddWatched: (movie: WatchedMovie) => void;
+  onRemoveWatched: (id: number) => void;
 }
 
 export default function MovieDetailsModal({
@@ -21,6 +22,7 @@ export default function MovieDetailsModal({
   watched,
   onClose,
   onAddWatched,
+  onRemoveWatched,
 }: MovieDetailsModalProps) {
   const [movie, setMovie] = useState<Partial<MovieDetails>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -202,11 +204,22 @@ export default function MovieDetailsModal({
                 {movie.overview}
               </p>
 
-              <div className="mb-5 rounded-md bg-surface p-4">
+              <div className="mb-5 flex items-center justify-between rounded-md bg-surface p-4">
                 {isWatched ? (
-                  <p className="text-sm text-zinc-200">
-                    You rated this {watchedEntry?.userRating} ⭐
-                  </p>
+                  <>
+                    <p className="text-sm text-zinc-200">
+                      You rated this {watchedEntry?.userRating} ⭐
+                    </p>
+                    <button
+                      onClick={() => {
+                        onRemoveWatched(selectedId);
+                        handleClose();
+                      }}
+                      className="rounded border border-zinc-600 px-3 py-1.5 text-sm text-zinc-300 outline-none transition-colors hover:border-red-400 hover:text-red-400 focus-visible:ring-2 focus-visible:ring-brand-light"
+                    >
+                      Remove from watchlist
+                    </button>
+                  </>
                 ) : (
                   <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                     <StarRating
