@@ -204,7 +204,7 @@ export default function MovieDetailsModal({
                 {movie.overview}
               </p>
 
-              <div className="mb-5 flex items-center justify-between rounded-md bg-surface p-4">
+              <div className="mb-5 flex flex-col items-start gap-3 rounded-md bg-surface p-4 sm:flex-row sm:items-center sm:justify-between">
                 {isWatched ? (
                   <>
                     <p className="text-sm text-zinc-200">
