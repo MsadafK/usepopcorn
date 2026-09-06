@@ -33,19 +33,26 @@ export default function Row({
           ))}
         </div>
       ) : (
-        <div
-          className="row-scroll flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:px-8"
-          role="group"
-          aria-label={title}
-        >
-          {movies.map((movie) => (
-            <div
-              key={movie.id}
-              className="w-[130px] shrink-0 snap-start sm:w-[160px]"
-            >
-              <PosterCard movie={movie} onSelectMovie={onSelectMovie} />
-            </div>
-          ))}
+        <div className="relative">
+          {/* Edge fades hint that the row scrolls - subtle, not a hard cutoff */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-6 bg-gradient-to-r from-ink to-transparent sm:w-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-ink to-transparent sm:w-10" />
+
+          <div
+            className="row-scroll flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:px-8"
+            role="group"
+            aria-label={title}
+          >
+            {movies.map((movie, i) => (
+              <div
+                key={movie.id}
+                className="w-[130px] shrink-0 snap-start sm:w-[160px] animate-fade-in-up"
+                style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }}
+              >
+                <PosterCard movie={movie} onSelectMovie={onSelectMovie} />
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </section>
