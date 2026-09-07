@@ -76,4 +76,39 @@ describe("toMovieDetails", () => {
     expect(() => toMovieDetails(base)).not.toThrow();
     expect(toMovieDetails(base).trailerKey).toBeNull();
   });
+
+  it("extracts the director from the crew list and caps cast at 5 names", () => {
+    const raw = {
+      ...base,
+      credits: {
+        cast: [
+          { name: "Actor One" },
+          { name: "Actor Two" },
+          { name: "Actor Three" },
+          { name: "Actor Four" },
+          { name: "Actor Five" },
+          { name: "Actor Six" },
+        ],
+        crew: [
+          { name: "Some Producer", job: "Producer" },
+          { name: "Jane Director", job: "Director" },
+        ],
+      },
+    };
+    const result = toMovieDetails(raw);
+    expect(result.director).toBe("Jane Director");
+    expect(result.cast).toEqual([
+      "Actor One",
+      "Actor Two",
+      "Actor Three",
+      "Actor Four",
+      "Actor Five",
+    ]);
+  });
+
+  it("defaults director to null and cast to an empty array when credits are missing", () => {
+    const result = toMovieDetails(base);
+    expect(result.director).toBeNull();
+    expect(result.cast).toEqual([]);
+  });
 });

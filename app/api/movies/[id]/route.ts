@@ -9,10 +9,10 @@ export async function GET(
   const { id } = await params;
 
   try {
-    // append_to_response pulls the trailer data in the same request instead
-    // of needing a second round trip to /movie/{id}/videos
+    // append_to_response pulls trailer + cast/crew data in the same request
+    // instead of needing extra round trips to /videos and /credits
     const data = await tmdbFetch(`/movie/${id}`, {
-      append_to_response: "videos",
+      append_to_response: "videos,credits",
     });
     return NextResponse.json(toMovieDetails(data));
   } catch (err) {

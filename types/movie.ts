@@ -25,6 +25,8 @@ export interface MovieDetails {
   voteAverage: number;
   genres: { id: number; name: string }[];
   trailerKey: string | null;
+  director: string | null;
+  cast: string[];
 }
 
 export interface WatchedMovie {

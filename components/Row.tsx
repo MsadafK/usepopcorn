@@ -8,6 +8,7 @@ interface RowProps {
   movies: { id: number; title: string; posterPath: string | null }[];
   onSelectMovie: (id: number) => void;
   isLoading?: boolean;
+  showRank?: boolean;
 }
 
 export default function Row({
@@ -15,6 +16,7 @@ export default function Row({
   movies,
   onSelectMovie,
   isLoading,
+  showRank,
 }: RowProps) {
   if (!isLoading && movies.length === 0) return null;
 
@@ -49,7 +51,11 @@ export default function Row({
                 className="w-[130px] shrink-0 snap-start sm:w-[160px] animate-fade-in-up"
                 style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }}
               >
-                <PosterCard movie={movie} onSelectMovie={onSelectMovie} />
+                <PosterCard
+                  movie={movie}
+                  onSelectMovie={onSelectMovie}
+                  rank={showRank ? i + 1 : undefined}
+                />
               </div>
             ))}
           </div>

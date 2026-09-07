@@ -20,6 +20,13 @@ export function toMovieDetails(raw: any): MovieDetails {
     (v: any) => v.site === "YouTube" && v.type === "Trailer"
   );
 
+  const director =
+    raw.credits?.crew?.find((c: any) => c.job === "Director")?.name ?? null;
+
+  const cast = (raw.credits?.cast ?? [])
+    .slice(0, 5)
+    .map((c: any) => c.name);
+
   return {
     id: raw.id,
     title: raw.title,
@@ -32,5 +39,7 @@ export function toMovieDetails(raw: any): MovieDetails {
     voteAverage: raw.vote_average,
     genres: raw.genres ?? [],
     trailerKey: trailer?.key ?? null,
+    director,
+    cast,
   };
 }

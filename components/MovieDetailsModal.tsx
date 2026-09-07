@@ -204,6 +204,19 @@ export default function MovieDetailsModal({
                 {movie.overview}
               </p>
 
+              {movie.cast && movie.cast.length > 0 && (
+                <p className="mb-1 text-sm text-zinc-400">
+                  <span className="text-zinc-500">Starring </span>
+                  {movie.cast.join(", ")}
+                </p>
+              )}
+              {movie.director && (
+                <p className="mb-5 text-sm text-zinc-400">
+                  <span className="text-zinc-500">Directed by </span>
+                  {movie.director}
+                </p>
+              )}
+
               <div className="mb-5 flex flex-col items-start gap-3 rounded-md bg-surface p-4 sm:flex-row sm:items-center sm:justify-between">
                 {isWatched ? (
                   <>

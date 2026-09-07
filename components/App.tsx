@@ -152,6 +152,7 @@ export default function App() {
               movies={trending}
               isLoading={trendingLoading}
               onSelectMovie={openMovie}
+              showRank
             />
             <Row
               title="Top rated"
