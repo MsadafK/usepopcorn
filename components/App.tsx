@@ -178,6 +178,7 @@ export default function App() {
           onClose={closeMovie}
           onAddWatched={handleAddWatched}
           onRemoveWatched={handleRemoveWatched}
+          onSelectMovie={openMovie}
         />
       )}
     </>

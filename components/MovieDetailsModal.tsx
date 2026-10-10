@@ -6,8 +6,10 @@ import { MovieDetails, WatchedMovie } from "@/types/movie";
 import { fetchMovieDetails } from "@/services/tmdbApi";
 import { backdropUrl } from "@/utils/tmdbImage";
 import { useKey } from "@/hooks/useKey";
+import { useRecommendations } from "@/hooks/useRecommendations";
 import Skeleton from "./Skeleton";
 import StarRating from "./StarRating";
+import Row from "./Row";
 
 interface MovieDetailsModalProps {
   selectedId: number;
@@ -15,6 +17,7 @@ interface MovieDetailsModalProps {
   onClose: () => void;
   onAddWatched: (movie: WatchedMovie) => void;
   onRemoveWatched: (id: number) => void;
+  onSelectMovie: (id: number) => void;
 }
 
 export default function MovieDetailsModal({
@@ -23,6 +26,7 @@ export default function MovieDetailsModal({
   onClose,
   onAddWatched,
   onRemoveWatched,
+  onSelectMovie,
 }: MovieDetailsModalProps) {
   const [movie, setMovie] = useState<Partial<MovieDetails>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -30,7 +34,19 @@ export default function MovieDetailsModal({
   const [isVisible, setIsVisible] = useState(false);
   const countRef = useRef(0);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const titleId = `movie-details-title-${selectedId}`;
+
+  // The modal doesn't unmount when navigating from one movie to a "More
+  // like this" pick - only selectedId changes. Reset the in-progress
+  // rating so it doesn't carry over to the new movie. This adjusts state
+  // during render (the documented pattern for "reset state when a prop
+  // changes") rather than in an effect, which avoids an extra render pass.
+  const [prevSelectedId, setPrevSelectedId] = useState(selectedId);
+  if (selectedId !== prevSelectedId) {
+    setPrevSelectedId(selectedId);
+    setUserRating(0);
+  }
 
   // Triggers the enter transition on mount
   useEffect(() => {
@@ -68,6 +84,18 @@ export default function MovieDetailsModal({
   useEffect(() => {
     if (userRating) countRef.current += 1;
   }, [userRating]);
+
+  // Scroll back to the top and reset the rating-decision counter when
+  // navigating to a different movie within the same mounted modal. These
+  // are DOM/ref side effects, so (unlike the userRating reset above) they
+  // belong in an effect rather than during render.
+  useEffect(() => {
+    scrollContainerRef.current?.scrollTo({ top: 0 });
+    countRef.current = 0;
+  }, [selectedId]);
+
+  const { movies: similarMovies, isLoading: similarLoading } =
+    useRecommendations(selectedId);
 
   useKey("Escape", handleClose);
 
@@ -122,6 +150,7 @@ export default function MovieDetailsModal({
 
   return (
     <div
+      ref={scrollContainerRef}
       className={`fixed inset-0 z-30 flex items-start justify-center overflow-y-auto px-4 py-8 transition-opacity duration-200 ${
         isVisible ? "bg-black/80 opacity-100" : "bg-black/80 opacity-0"
       }`}
@@ -263,6 +292,17 @@ export default function MovieDetailsModal({
                 </div>
               )}
             </div>
+
+            {(similarLoading || similarMovies.length > 0) && (
+              <div className="pb-5">
+                <Row
+                  title="More like this"
+                  movies={similarMovies}
+                  isLoading={similarLoading}
+                  onSelectMovie={onSelectMovie}
+                />
+              </div>
+            )}
           </>
         )}
       </div>
