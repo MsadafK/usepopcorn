@@ -300,6 +300,7 @@ export default function MovieDetailsModal({
                   movies={similarMovies}
                   isLoading={similarLoading}
                   onSelectMovie={onSelectMovie}
+                  surface="modal"
                 />
               </div>
             )}

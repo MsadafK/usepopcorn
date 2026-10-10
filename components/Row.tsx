@@ -9,6 +9,8 @@ interface RowProps {
   onSelectMovie: (id: number) => void;
   isLoading?: boolean;
   showRank?: boolean;
+  /** "modal" matches the raised surface color used inside the details modal */
+  surface?: "page" | "modal";
 }
 
 export default function Row({
@@ -17,7 +19,9 @@ export default function Row({
   onSelectMovie,
   isLoading,
   showRank,
+  surface = "page",
 }: RowProps) {
+  const fadeFrom = surface === "modal" ? "from-surface-raised" : "from-ink";
   if (!isLoading && movies.length === 0) return null;
 
   return (
@@ -37,11 +41,15 @@ export default function Row({
       ) : (
         <div className="relative">
           {/* Edge fades hint that the row scrolls - subtle, not a hard cutoff */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-6 bg-gradient-to-r from-ink to-transparent sm:w-10" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-ink to-transparent sm:w-10" />
+          <div
+            className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-6 bg-gradient-to-r ${fadeFrom} to-transparent sm:w-10`}
+          />
+          <div
+            className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l ${fadeFrom} to-transparent sm:w-10`}
+          />
 
           <div
-            className="row-scroll flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:px-8"
+            className="row-scroll flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 sm:scroll-px-8 sm:px-8"
             role="group"
             aria-label={title}
           >
