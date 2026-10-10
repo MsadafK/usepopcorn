@@ -18,6 +18,7 @@ import Row from "./Row";
 import GenreFilter from "./GenreFilter";
 import MovieGrid from "./MovieGrid";
 import MovieDetailsModal from "./MovieDetailsModal";
+import WatchlistStats from "./WatchlistStats";
 
 export default function App() {
   const router = useRouter();
@@ -139,6 +140,7 @@ export default function App() {
               movies={watched}
               onSelectMovie={openMovie}
             />
+            <WatchlistStats watched={watched} />
             {topRatedWatched && (
               <Row
                 title={`Because you rated "${topRatedWatched.title}" highly`}
