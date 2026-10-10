@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import Image from "next/image";
 import { useMovies } from "@/hooks/useMovies";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { posterUrl } from "@/utils/tmdbImage";
 
 interface CommandPaletteProps {
@@ -19,7 +20,9 @@ export default function CommandPalette({
   const [query, setQuery] = useState("");
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const { movies, isLoading } = useMovies(query);
+  useFocusTrap(dialogRef);
 
   // Focusing an existing DOM node imperatively - not a setState call, so
   // this one's a genuine effect use case, not the lint rule's target.
@@ -57,6 +60,7 @@ export default function CommandPalette({
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Quick search"

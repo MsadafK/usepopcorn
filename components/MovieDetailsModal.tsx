@@ -6,6 +6,7 @@ import { MovieDetails, WatchedMovie } from "@/types/movie";
 import { fetchMovieDetails } from "@/services/tmdbApi";
 import { backdropUrl } from "@/utils/tmdbImage";
 import { useKey } from "@/hooks/useKey";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { useRecommendations } from "@/hooks/useRecommendations";
 import Skeleton from "./Skeleton";
 import StarRating from "./StarRating";
@@ -35,6 +36,7 @@ export default function MovieDetailsModal({
   const countRef = useRef(0);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = `movie-details-title-${selectedId}`;
 
   // The modal doesn't unmount when navigating from one movie to a "More
@@ -97,6 +99,7 @@ export default function MovieDetailsModal({
   const { movies: similarMovies, isLoading: similarLoading } =
     useRecommendations(selectedId);
 
+  useFocusTrap(dialogRef);
   useKey("Escape", handleClose);
 
   useEffect(() => {
@@ -157,6 +160,7 @@ export default function MovieDetailsModal({
       onClick={handleClose}
     >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
