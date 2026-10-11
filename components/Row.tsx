@@ -1,5 +1,6 @@
 "use client";
 
+import { ReactNode } from "react";
 import PosterCard from "./PosterCard";
 import Skeleton from "./Skeleton";
 
@@ -11,6 +12,8 @@ interface RowProps {
   showRank?: boolean;
   /** "modal" matches the raised surface color used inside the details modal */
   surface?: "page" | "modal";
+  /** Optional control shown on the right of the heading (e.g. a sort menu) */
+  headerAction?: ReactNode;
 }
 
 export default function Row({
@@ -20,15 +23,17 @@ export default function Row({
   isLoading,
   showRank,
   surface = "page",
+  headerAction,
 }: RowProps) {
   const fadeFrom = surface === "modal" ? "from-surface-raised" : "from-ink";
   if (!isLoading && movies.length === 0) return null;
 
   return (
     <section className="mt-8 first:mt-0">
-      <h2 className="mb-3 px-4 text-lg font-semibold text-white sm:px-8">
-        {title}
-      </h2>
+      <div className="mb-3 flex items-center justify-between gap-3 px-4 sm:px-8">
+        <h2 className="text-lg font-semibold text-white">{title}</h2>
+        {headerAction}
+      </div>
       {isLoading ? (
         <div className="flex gap-3 overflow-x-hidden px-4 sm:px-8">
           {Array.from({ length: 6 }).map((_, i) => (

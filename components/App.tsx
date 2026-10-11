@@ -19,6 +19,12 @@ import GenreFilter from "./GenreFilter";
 import MovieGrid from "./MovieGrid";
 import MovieDetailsModal from "./MovieDetailsModal";
 import WatchlistStats from "./WatchlistStats";
+import WatchlistSortSelect from "./WatchlistSortSelect";
+import {
+  sortWatchlist,
+  isWatchlistSort,
+  WatchlistSort,
+} from "@/lib/sortWatchlist";
 
 export default function App() {
   const router = useRouter();
@@ -39,6 +45,11 @@ export default function App() {
     [],
     "watched"
   );
+  const [storedSort, setSort] = useLocalStorageState<WatchlistSort>(
+    "recent",
+    "watchlist-sort"
+  );
+  const sort = isWatchlistSort(storedSort) ? storedSort : "recent";
 
   const { movies: trending, isLoading: trendingLoading } =
     useMovieList(fetchTrending);
@@ -137,8 +148,13 @@ export default function App() {
             {featured && <Hero movie={featured} onSelectMovie={openMovie} />}
             <Row
               title="Your watchlist"
-              movies={watched}
+              movies={sortWatchlist(watched, sort)}
               onSelectMovie={openMovie}
+              headerAction={
+                watched.length > 1 ? (
+                  <WatchlistSortSelect value={sort} onChange={setSort} />
+                ) : undefined
+              }
             />
             <WatchlistStats watched={watched} />
             {topRatedWatched && (
